@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study India</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F3F6FB;--card:#FFFFFF;--ink:#14213D;--mut:#505B72;--line:#D6DDEA;--a:#1565C0;--at:#FFFFFF;--ok:#1B7F3B;--bad:#B3261E}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1420;--card:#171F30;--ink:#EAF0FB;--mut:#A3AFC6;--line:#2A3550;--a:#7FB2F0;--at:#0E1420;--ok:#7DD39A;--bad:#F2B8B5}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Devanagari',system-ui,sans-serif;font-size:16px}
+main{max-width:560px;margin:0 auto;padding:12px 14px 96px}
+h1{font-size:22px;margin:8px 0 2px;font-weight:600}
+.sub{color:var(--mut);font-size:14px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h2{font-size:17px;margin:0 0 10px;font-weight:600}
+button,input,select,textarea{font:inherit;color:var(--ink)}
+input,select,textarea{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);margin-bottom:8px}
+textarea{min-height:110px;resize:vertical}
+.btn{min-height:48px;width:100%;border:0;border-radius:10px;background:var(--a);color:var(--at);font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.5}
+.ghost{min-height:44px;border:1px solid var(--line);background:none;border-radius:8px;padding:0 12px;cursor:pointer}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{min-height:44px;padding:0 14px;border:1px solid var(--line);background:none;border-radius:22px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--a);color:var(--at);border-color:var(--a);font-weight:600}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.row:first-child{border-top:0}
+.mut{color:var(--mut);font-size:13px}
+p.t{line-height:1.7;margin:0 0 12px}
+.q{border-top:1px solid var(--line);padding:12px 0}
+.q:first-child{border-top:0}
+.opt{display:flex;gap:10px;align-items:center;min-height:44px;padding:4px 0}
+.opt input{width:20px;min-height:20px;margin:0}
+.ok{color:var(--ok);font-weight:600}.no{color:var(--bad);font-weight:600}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 8px}
+nav button{flex:1;min-height:52px;border:0;background:none;font-size:13px;color:var(--mut);cursor:pointer}
+nav button[aria-current="true"]{color:var(--a);font-weight:600}
+.bar{height:10px;border:1px solid var(--line);border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--a)}
+</style>
+</head>
+<body>
+<main>
+<h1>Study India</h1><p class="sub" id="sub">नमस्ते, विद्यार्थी</p>
+
+<section id="v-home">
+<div class="card"><h2>कक्षा चुनें</h2><select id="cls" aria-label="कक्षा"></select></div>
+<div class="card" id="cont" hidden><h2>जहाँ छोड़ा था वहीं से शुरू करें</h2><div id="controw" class="row"></div></div>
+<div class="card"><h2>विषय</h2><div class="chips" id="chips"></div><div id="list"><span class="mut">लोड हो रहा है…</span></div></div>
+</section>
+
+<section id="v-lesson" hidden>
+<div class="card"><button class="ghost" id="back">← वापस</button></div>
+<div class="card"><h2 id="lt"></h2><div class="mut" id="lm" style="margin-bottom:10px"></div><div id="lb"></div>
+<button class="ghost" id="save" style="margin-top:6px">नोट्स सेव करें</button></div>
+<div class="card" id="qz" hidden><h2>सवाल हल करें</h2><div id="qs"></div><button class="btn" id="chk">जवाब जाँचें</button><div id="res" style="margin-top:10px;font-weight:600"></div></div>
+</section>
+
+<section id="v-prog" hidden>
+<div class="card"><h2>मेरी प्रगति</h2><div id="pg"></div></div>
+<div class="card"><h2>सेव किए गए पाठ</h2><div id="sv"></div></div>
+</section>
+
+<section id="v-admin" hidden>
+<div class="card" id="lg"><h2>एडमिन लॉगिन</h2>
+<input id="pw" type="password" placeholder="पासवर्ड" aria-label="पासवर्ड">
+<button class="btn" id="lgb">लॉगिन</button><div class="mut" id="lge" style="margin-top:8px"></div></div>
+<div id="ad" hidden>
+<div class="card"><h2>नया पाठ जोड़ें</h2>
+<input id="ac" placeholder="कक्षा (जैसे 8)" aria-label="कक्षा">
+<input id="as" placeholder="विषय (जैसे गणित)" aria-label="विषय">
+<input id="at" placeholder="पाठ का शीर्षक" aria-label="शीर्षक">
+<textarea id="ab" placeholder="पाठ लिखें। नया अनुच्छेद बनाने के लिए एक खाली लाइन छोड़ें।" aria-label="पाठ"></textarea>
+<textarea id="aq" placeholder="सवाल (हर लाइन में एक):&#10;सवाल | विकल्प 1 | विकल्प 2 | विकल्प 3 | सही नंबर&#10;जैसे: 5 का वर्ग? | 10 | 25 | 30 | 2" aria-label="सवाल"></textarea>
+<button class="btn" id="aadd">पाठ जोड़ें</button><div class="mut" id="ae" style="margin-top:8px"></div></div>
+<div class="card"><h2>सभी पाठ</h2><div id="al"></div></div>
+</div>
+</section>
+</main>
+
+<nav aria-label="मुख्य मेनू">
+<button data-v="home" aria-current="true">होम</button>
+<button data-v="prog">मेरी प्रगति</button>
+<button data-v="admin">एडमिन</button>
+</nav>
+
+<script>
+const $=id=>document.getElementById(id);
+const mk=(t,x,c)=>{const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+async function api(p,o){const r=await fetch(p,o);let d=null;try{d=await r.json()}catch(e){}
+if(!r.ok)throw new Error((d&&d.error)||('सर्वर में दिक्कत (कोड '+r.status+')'));return d}
+
+let cls=store.get('cls',''),subj='',lessons=[],cur=null,adminPw=sessionStorage.getItem('apw')||'';
+const views=['home','lesson','prog','admin'];
+function show(v){views.forEach(k=>$('v-'+k).hidden=k!==v);
+document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===(v==='lesson'?'home':v)));
+window.scrollTo(0,0);if(v==='prog')renderProg();if(v==='admin')initAdmin()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+
+async function loadHome(){
+ try{
+  const cs=await api('/api/classes');const sel=$('cls');sel.textContent='';
+  if(!cs.length){sel.append(mk('option','अभी कोई कक्षा नहीं'));$('list').textContent='अभी कोई पाठ नहीं है।';return}
+  cs.forEach(c=>{const o=mk('option','कक्षा '+c);o.value=c;sel.append(o)});
+  if(!cs.includes(cls))cls=cs[0];sel.value=cls;await loadLessons();
+ }catch(e){$('list').textContent=e.message}}
+$('cls').onchange=async e=>{cls=e.target.value;store.set('cls',cls);subj='';await loadLessons()};
+async function loadLessons(){
+ try{lessons=await api('/api/lessons?cls='+encodeURIComponent(cls));renderHome()}catch(e){$('list').textContent=e.message}}
+function renderHome(){
+ const subs=[...new Set(lessons.map(l=>l.subject))];
+ const ch=$('chips');ch.textContent='';
+ [['','सभी'],...subs.map(s=>[s,s])].forEach(([v,t])=>{const b=mk('button',t,'chip');b.setAttribute('aria-pressed',String(subj===v));b.onclick=()=>{subj=v;renderHome()};ch.append(b)});
+ const box=$('list');box.textContent='';const sh=lessons.filter(l=>!subj||l.subject===subj);
+ if(!sh.length)box.append(mk('span','इस कक्षा में अभी कोई पाठ नहीं है।','mut'));
+ const done=store.get('done',{});
+ sh.forEach(l=>{const r=mk('div',null,'row');const d=mk('div');d.append(mk('div',l.title),mk('div',l.subject+(done[l.id]?' · स्कोर '+done[l.id].score+'/'+done[l.id].total:''),'mut'));
+  r.append(d,mk('span','पढ़ें →','mut'));r.onclick=()=>openLesson(l.id);box.append(r)});
+ const last=store.get('last',null);$('cont').hidden=!last;
+ if(last){const c=$('controw');c.textContent='';const d=mk('div');d.append(mk('div',last.title),mk('div','आगे पढ़ें →','mut'));c.append(d);c.onclick=()=>openLesson(last.id)}}
+
+async function openLesson(id){
+ try{cur=await api('/api/lessons/'+id)}catch(e){alert(e.message);return}
+ store.set('last',{id:cur.id,title:cur.title});
+ $('lt').textContent=cur.title;$('lm').textContent=cur.subject+' · कक्षा '+cur.cls;
+ const lb=$('lb');lb.textContent='';cur.body.split(/\n\s*\n/).forEach(p=>lb.append(mk('p',p.trim(),'t')));
+ const sv=store.get('saved',{});$('save').textContent=sv[cur.id]?'✓ सेव है (हटाएँ)':'नोट्स सेव करें';
+ const qs=$('qs');qs.textContent='';$('res').textContent='';
+ $('qz').hidden=!cur.quiz.length;
+ cur.quiz.forEach((q,i)=>{const w=mk('div',null,'q');w.append(mk('div',(i+1)+'. '+q.q));
+  q.o.forEach((o,j)=>{const l=mk('label',null,'opt');const r=document.createElement('input');r.type='radio';r.name='q'+i;r.value=j;l.append(r,mk('span',o));w.append(l)});
+  w.append(mk('div','',''));w.lastChild.id='fb'+i;qs.append(w)});
+ show('lesson')}
+$('back').onclick=()=>{show('home');renderHome()};
+$('save').onclick=()=>{if(!cur)return;const sv=store.get('saved',{});
+ if(sv[cur.id]){delete sv[cur.id];$('save').textContent='नोट्स सेव करें'}else{sv[cur.id]={title:cur.title,subject:cur.subject};$('save').textContent='✓ सेव है (हटाएँ)'}store.set('saved',sv)};
+$('chk').onclick=()=>{if(!cur)return;let sc=0;
+ cur.quiz.forEach((q,i)=>{const s=document.querySelector('input[name="q'+i+'"]:checked');const fb=$('fb'+i);fb.textContent='';
+  if(!s){fb.append(mk('span','जवाब चुनें','mut'));return}
+  if(Number(s.value)===q.a){sc++;fb.append(mk('span','✓ सही','ok'))}else fb.append(mk('span','✗ गलत। सही जवाब: '+q.o[q.a],'no'))});
+ $('res').textContent='आपका स्कोर: '+sc+' / '+cur.quiz.length;
+ const done=store.get('done',{});done[cur.id]={title:cur.title,score:sc,total:cur.quiz.length};store.set('done',done)};
+
+function renderProg(){
+ const done=store.get('done',{}),ids=Object.keys(done),pg=$('pg');pg.textContent='';
+ if(!ids.length)pg.append(mk('span','अभी कोई टेस्ट हल नहीं किया।','mut'));
+ else{pg.append(mk('div',ids.length+' पाठ के सवाल हल किए','mut'));
+  ids.forEach(id=>{const d=done[id];const r=mk('div');r.style.padding='10px 0';r.append(mk('div',d.title+' — '+d.score+'/'+d.total));
+   const b=mk('div',null,'bar');const i=document.createElement('i');i.style.width=(d.total?d.score/d.total*100:0)+'%';b.append(i);r.append(b);pg.append(r)})}
+ const sv=store.get('saved',{}),sb=$('sv');sb.textContent='';const sid=Object.keys(sv);
+ if(!sid.length)sb.append(mk('span','अभी कोई पाठ सेव नहीं है।','mut'));
+ sid.forEach(id=>{const r=mk('div',null,'row');const d=mk('div');d.append(mk('div',sv[id].title),mk('div',sv[id].subject,'mut'));r.append(d,mk('span','पढ़ें →','mut'));r.onclick=()=>openLesson(id);sb.append(r)})}
+
+function adminHdr(){return{'content-type':'application/json','x-admin':adminPw}}
+async function initAdmin(){
+ if(!adminPw){$('lg').hidden=false;$('ad').hidden=true;return}
+ try{await api('/api/admin/check',{method:'POST',headers:adminHdr()});$('lg').hidden=true;$('ad').hidden=false;loadAdminList()}
+ catch(e){adminPw='';sessionStorage.removeItem('apw');$('lg').hidden=false;$('ad').hidden=true;$('lge').textContent=e.message}}
+$('lgb').onclick=()=>{adminPw=$('pw').value;sessionStorage.setItem('apw',adminPw);$('lge').textContent='';initAdmin()};
+async function loadAdminList(){
+ const box=$('al');box.textContent='';
+ try{const all=await api('/api/lessons');
+  if(!all.length)box.append(mk('span','कोई पाठ नहीं।','mut'));
+  all.forEach(l=>{const r=mk('div',null,'row');r.style.cursor='default';const d=mk('div');d.append(mk('div',l.title),mk('div',l.subject+' · कक्षा '+l.cls,'mut'));
+   const x=mk('button','हटाएँ','ghost');x.onclick=async()=>{if(!confirm('यह पाठ हटाएँ?'))return;
+    try{await api('/api/admin/lessons/'+l.id,{method:'DELETE',headers:adminHdr()});loadAdminList();loadHome()}catch(e){$('ae').textContent=e.message}};
+   r.append(d,x);box.append(r)})}catch(e){box.textContent=e.message}}
+$('aadd').onclick=async()=>{
+ const quiz=[];const lines=$('aq').value.split('\n').map(s=>s.trim()).filter(Boolean);
+ for(const ln of lines){const p=ln.split('|').map(s=>s.trim());
+  if(p.length<4){$('ae').textContent='सवाल का रूप गलत: '+ln;return}
+  const a=Number(p[p.length-1])-1,o=p.slice(1,-1);
+  if(!Number.isInteger(a)||a<0||a>=o.length){$('ae').textContent='सही नंबर गलत: '+ln;return}
+  quiz.push({q:p[0],o,a})}
+ try{await api('/api/admin/lessons',{method:'POST',headers:adminHdr(),body:JSON.stringify({cls:$('ac').value,subject:$('as').value,title:$('at').value,body:$('ab').value,quiz})});
+  $('at').value=$('ab').value=$('aq').value='';$('ae').textContent='✓ पाठ जुड़ गया';loadAdminList();loadHome()}
+ catch(e){$('ae').textContent=e.message}};
+
+loadHome();
+</script>
+</body>
+  </html>
